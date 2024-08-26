@@ -1,0 +1,24 @@
+{
+  "name": "regextoolkit",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watchAll"
+  },
+  "keywords": [],
+  "author": "Moemen Saade",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^22.5.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "tslib": "^2.7.0"
+  }
+}

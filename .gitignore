@@ -1,0 +1,22 @@
+# Node modules
+node_modules/
+
+# Build artifacts
+dist/
+
+# Coverage reports
+coverage/
+
+# Environment files
+.env
+
+# IDE specific files
+.vscode/
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Compiled files
+*.js
+*.js.map
