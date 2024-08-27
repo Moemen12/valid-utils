@@ -11,6 +11,11 @@ export type AllowedProtocols =
   | "ws"
   | "wss";
 
+export interface ResponseShape {
+  isValid: boolean;
+  result: string | number;
+}
+
 export interface GlobalOptions {
   minLength?: number;
   maxLength?: number;

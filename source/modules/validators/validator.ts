@@ -3,6 +3,7 @@ import {
   EmailOptions,
   NumericOptions,
   PasswordOptions,
+  ResponseShape,
   UrlOptions,
 } from "./types";
 
@@ -15,13 +16,13 @@ import {
  *
  * @param email - The email address to validate.
  * @param options - Optional configuration for the validation process.
- * @returns The validated email address or { isValid: false , reason: "message" }; if validation fails.
+ * @returns \{ isValid: boolean , result: "message" }
  */
 
 export function isItValidEmail(
   email: string,
   options: EmailOptions = {}
-): string | { isValid: false; reason: string } {
+): ResponseShape {
   const {
     pattern = EMAIL_VALIDATION_PATTERN,
     minLength = 0,
@@ -36,7 +37,7 @@ export function isItValidEmail(
   } = options;
 
   if (isRequired && !email) {
-    return { isValid: false, reason: "Email is required" };
+    return { isValid: false, result: "Email is required" };
   }
 
   const normalizedEmail = caseSensitive ? email : email.toLowerCase();
@@ -44,14 +45,14 @@ export function isItValidEmail(
   if (normalizedEmail.length < minLength) {
     return {
       isValid: false,
-      reason: `Email is too short (minimum ${minLength} characters)`,
+      result: `Email is too short (minimum ${minLength} characters)`,
     };
   }
 
   if (normalizedEmail.length > maxLength) {
     return {
       isValid: false,
-      reason: `Email is too long (maximum ${maxLength} characters)`,
+      result: `Email is too long (maximum ${maxLength} characters)`,
     };
   }
 
@@ -60,53 +61,54 @@ export function isItValidEmail(
   if (!localPart || !domain) {
     return {
       isValid: false,
-      reason: "Invalid email format (missing @ or local/domain part)",
+      result: "Invalid email format (missing @ or local/domain part)",
     };
   }
 
   if (!allowSpecialCharacters && /[^a-zA-Z0-9@.]/.test(localPart)) {
     return {
       isValid: false,
-      reason: "Special characters are not allowed in the local part",
+      result: "Special characters are not allowed in the local part",
     };
   }
 
   const hasTLD = /\.[a-zA-Z]{2,}$/.test(domain);
 
   if (requiredTLD && !hasTLD) {
-    return { isValid: false, reason: "Top-level domain (TLD) is required" };
+    return { isValid: false, result: "Top-level domain (TLD) is required" };
   }
 
   const domainParts: string[] = domain.split(".");
   const hasSubdomain: boolean = domainParts.length > 2;
 
   if (!allowSubdomains && hasSubdomain) {
-    return { isValid: false, reason: "Subdomains are not allowed" };
+    return { isValid: false, result: "Subdomains are not allowed" };
   }
 
   if (allowedDomains && !allowedDomains.includes(domain)) {
     return {
       isValid: false,
-      reason: "Domain is not in the list of allowed domains",
+      result: "Domain is not in the list of allowed domains",
     };
   }
 
   if (disallowedDomains && disallowedDomains.includes(domain)) {
     return {
       isValid: false,
-      reason: "Domain is in the list of disallowed domains",
+      result: "Domain is in the list of disallowed domains",
     };
   }
 
   if (!pattern.test(normalizedEmail)) {
     return {
       isValid: false,
-      reason: "Email does not match the required pattern",
+      result: "Email does not match the required pattern",
     };
   }
 
-  return normalizedEmail;
+  return { isValid: true, result: normalizedEmail };
 }
+
 /**
  * Validates an Password based on various customizable options.
  *
@@ -116,13 +118,13 @@ export function isItValidEmail(
  *
  * @param password - The password to validate.
  * @param options - Optional configuration for the validation process.
- * @returns The validated password or { isValid: false , reason: "message" }; if validation fails.
+ * @returns \{ isValid: boolean , result: "message" }
  */
 
 export function isItValidPass(
   password: string,
   options: PasswordOptions = {}
-): string | { isValid: false; reason: string } {
+): ResponseShape {
   const {
     minLength = 0,
     maxLength = Infinity,
@@ -137,13 +139,13 @@ export function isItValidPass(
   if (password.length < minLength) {
     return {
       isValid: false,
-      reason: `Password is too short (minimum ${minLength} characters)`,
+      result: `Password is too short (minimum ${minLength} characters)`,
     };
   }
   if (password.length > maxLength) {
     return {
       isValid: false,
-      reason: `Password is too long (maximum ${maxLength} characters)`,
+      result: `Password is too long (maximum ${maxLength} characters)`,
     };
   }
 
@@ -151,7 +153,7 @@ export function isItValidPass(
   if (uppercaseCount < requireUppercase) {
     return {
       isValid: false,
-      reason: `Not enough uppercase characters (requires ${requireUppercase}, found ${uppercaseCount})`,
+      result: `Not enough uppercase characters (requires ${requireUppercase}, found ${uppercaseCount})`,
     };
   }
 
@@ -159,7 +161,7 @@ export function isItValidPass(
   if (lowercaseCount < requireLowercase) {
     return {
       isValid: false,
-      reason: `Not enough lowercase characters (requires ${requireLowercase}, found ${lowercaseCount})`,
+      result: `Not enough lowercase characters (requires ${requireLowercase}, found ${lowercaseCount})`,
     };
   }
 
@@ -167,7 +169,7 @@ export function isItValidPass(
   if (numberCount < requireNumbers) {
     return {
       isValid: false,
-      reason: `Not enough numbers (requires ${requireNumbers}, found ${numberCount})`,
+      result: `Not enough numbers (requires ${requireNumbers}, found ${numberCount})`,
     };
   }
 
@@ -179,7 +181,7 @@ export function isItValidPass(
   if (specialCharCount < requireSpecialChars) {
     return {
       isValid: false,
-      reason: `Not enough special characters (requires ${requireSpecialChars}, found ${specialCharCount})`,
+      result: `Not enough special characters (requires ${requireSpecialChars}, found ${specialCharCount})`,
     };
   }
 
@@ -187,11 +189,11 @@ export function isItValidPass(
   if (uniqueChars < minUniqueChars) {
     return {
       isValid: false,
-      reason: `Not enough unique characters (requires ${minUniqueChars}, found ${uniqueChars})`,
+      result: `Not enough unique characters (requires ${minUniqueChars}, found ${uniqueChars})`,
     };
   }
 
-  return password;
+  return { isValid: true, result: password };
 }
 
 /**
@@ -203,13 +205,10 @@ export function isItValidPass(
  *
  * @param date - The date to validate.
  * @param format - The date format to validate.
- * @returns The validated date or { isValid: false , reason: "message" }; if validation fails.
+ * @returns \{ isValid: boolean , result: "message" }
  */
 
-export function isItValidDate(
-  date: string,
-  format: string
-): string | { isValid: false; reason: string } {
+export function isItValidDate(date: string, format: string): ResponseShape {
   let regex: RegExp;
   let day: number, month: number, year: number;
 
@@ -219,7 +218,7 @@ export function isItValidDate(
       if (!regex.test(date)) {
         return {
           isValid: false,
-          reason: "Date doesn't match the YYYY-MM-DD format",
+          result: "Date doesn't match the YYYY-MM-DD format",
         };
       }
       [year, month, day] = date.split("-").map(Number);
@@ -229,7 +228,7 @@ export function isItValidDate(
       if (!regex.test(date)) {
         return {
           isValid: false,
-          reason: "Date doesn't match the MM/DD/YYYY format",
+          result: "Date doesn't match the MM/DD/YYYY format",
         };
       }
       [month, day, year] = date.split("/").map(Number);
@@ -239,20 +238,20 @@ export function isItValidDate(
       if (!regex.test(date)) {
         return {
           isValid: false,
-          reason: "Date doesn't match the DD/MM/YYYY format",
+          result: "Date doesn't match the DD/MM/YYYY format",
         };
       }
       [day, month, year] = date.split("/").map(Number);
       break;
     default:
-      return { isValid: false, reason: "Unsupported date format" };
+      return { isValid: false, result: "Unsupported date format" };
   }
 
   // Check if month is valid
   if (month < 1 || month > 12) {
     return {
       isValid: false,
-      reason: `Invalid month: ${month}. Month should be between 1 and 12`,
+      result: `Invalid month: ${month}. Month should be between 1 and 12`,
     };
   }
 
@@ -261,12 +260,12 @@ export function isItValidDate(
   if (day < 1 || day > daysInMonth) {
     return {
       isValid: false,
-      reason: `Invalid day: ${day}. Day should be between 1 and ${daysInMonth} for month ${month}`,
+      result: `Invalid day: ${day}. Day should be between 1 and ${daysInMonth} for month ${month}`,
     };
   }
 
   // If all checks pass, return the original date string
-  return date;
+  return { isValid: true, result: date };
 }
 
 /**
@@ -278,26 +277,26 @@ export function isItValidDate(
  *
  * @param value  - The number to validate.
  * @param options - Optional configuration for the validation process.
- * @returns The validated number or { isValid: false , reason: "message" }; if validation fails.
+ * @returns \{ isValid: boolean , result: "message" }
  */
 
 export function isItValidNumber(
   value: number | string,
   options?: NumericOptions
-): number | { isValid: false; reason: string } {
+): ResponseShape {
   let numValue: number;
 
   if (typeof value === "string") {
     numValue = parseFloat(value);
     if (isNaN(numValue)) {
-      return { isValid: false, reason: `"${value}" is not a valid number` };
+      return { isValid: false, result: `"${value}" is not a valid number` };
     }
   } else {
     numValue = value;
   }
 
   if (isNaN(numValue)) {
-    return { isValid: false, reason: "Value is NaN" };
+    return { isValid: false, result: "Value is NaN" };
   }
 
   const { min, max, decimalPlaces } = options || {};
@@ -306,13 +305,13 @@ export function isItValidNumber(
   if (min !== undefined && numValue < min) {
     return {
       isValid: false,
-      reason: `Value ${numValue} is less than the minimum ${min}`,
+      result: `Value ${numValue} is less than the minimum ${min}`,
     };
   }
   if (max !== undefined && numValue > max) {
     return {
       isValid: false,
-      reason: `Value ${numValue} is greater than the maximum ${max}`,
+      result: `Value ${numValue} is greater than the maximum ${max}`,
     };
   }
 
@@ -322,12 +321,12 @@ export function isItValidNumber(
     if (!decimalRegex.test(numValue.toString())) {
       return {
         isValid: false,
-        reason: `Value ${numValue} has more than ${decimalPlaces} decimal places`,
+        result: `Value ${numValue} has more than ${decimalPlaces} decimal places`,
       };
     }
   }
 
-  return numValue;
+  return { isValid: true, result: numValue };
 }
 
 /**
@@ -339,13 +338,10 @@ export function isItValidNumber(
  *
  * @param url  - The url to validate.
  * @param options - Optional configuration for the validation process.
- * @returns The validated url or { isValid: false , reason: "message" }; if validation fails.
+ * @returns \{ isValid: boolean , result: "message" }
  */
 
-export function isItValidUrl(
-  url: string,
-  options?: UrlOptions
-): string | { isValid: false; reason: string } {
+export function isItValidUrl(url: string, options?: UrlOptions): ResponseShape {
   const { protocols, format } = options || {};
   const urlRegex = new RegExp(
     `^(https?|ftp|ftps|mailto|file|data|tel|sms|ws|wss):\\/\\/[^\\s/$.?#].[^\\s]*$`
@@ -354,19 +350,19 @@ export function isItValidUrl(
   if (!urlRegex.test(url)) {
     return {
       isValid: false,
-      reason: "URL does not match the basic URL pattern",
+      result: "URL does not match the basic URL pattern",
     };
   }
 
   if (format && !format.test(url)) {
     return {
       isValid: false,
-      reason: "URL does not match the specified format",
+      result: "URL does not match the specified format",
     };
   }
 
   if (!protocols || protocols.length === 0) {
-    return { isValid: false, reason: "No protocols specified in options" };
+    return { isValid: false, result: "No protocols specified in options" };
   }
 
   const protocolPattern = protocols.join("|");
@@ -374,11 +370,11 @@ export function isItValidUrl(
   if (!protocolRegex.test(url)) {
     return {
       isValid: false,
-      reason: `URL protocol does not match any of the specified protocols: ${protocols.join(
+      result: `URL protocol does not match any of the specified protocols: ${protocols.join(
         ", "
       )}`,
     };
   }
 
-  return url;
+  return { isValid: true, result: url };
 }
