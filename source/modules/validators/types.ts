@@ -1,10 +1,23 @@
-type GlobalOptions = {
+export type AllowedProtocols =
+  | "http"
+  | "https"
+  | "ftp"
+  | "ftps"
+  | "mailto"
+  | "file"
+  | "data"
+  | "tel"
+  | "sms"
+  | "ws"
+  | "wss";
+
+export interface GlobalOptions {
   minLength?: number;
   maxLength?: number;
-};
-
-type EmailOptions = {
   pattern?: RegExp;
+}
+
+export interface EmailOptions extends GlobalOptions {
   allowSpecialCharacters?: boolean;
   allowedDomains?: string[];
   disallowedDomains?: string[];
@@ -12,7 +25,24 @@ type EmailOptions = {
   allowSubdomains?: boolean;
   requiredTLD?: boolean;
   isRequired?: boolean;
-};
+}
 
-// Combine both types into a new type
-type Options = GlobalOptions & EmailOptions;
+export interface PasswordOptions extends GlobalOptions {
+  requireUppercase?: number;
+  requireLowercase?: number;
+  requireNumbers?: number;
+  requireSpecialChars?: number;
+  specialChars?: string;
+  minUniqueChars?: number;
+}
+
+export interface NumericOptions {
+  min?: number;
+  max?: number;
+  decimalPlaces?: number;
+}
+
+export interface UrlOptions {
+  protocols?: AllowedProtocols[];
+  format?: RegExp;
+}

@@ -1,15 +1,20 @@
 {
-  "name": "regextoolkit",
+  "name": "validation-toolkit",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "source/index.ts",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watchAll"
   },
-  "keywords": [],
+  "keywords": [
+    "validation",
+    "javascript-validation",
+    "nodejs-validation",
+    "SPA-validation"
+  ],
   "author": "Moemen Saade",
   "license": "ISC",
-  "description": "",
+  "description": "A simple and flexible validation package for common data types and formats, including email, URLs, dates, numbers, and more.",
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^22.5.0",
