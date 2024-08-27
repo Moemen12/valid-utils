@@ -183,6 +183,4 @@ This type defines the allowed protocols for URLs.
 | `ws`     | WebSocket protocol                 |
 | `wss`    | WebSocket Secure protocol          |
 
-## Contributing
 
-There are many different ways to contribute to React Router's development. If you're interested, check out [our contributing guidelines](CONTRIBUTING.md) to learn how you can get involved.
