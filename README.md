@@ -1,7 +1,5 @@
 # ` Welcome to Valid Utils`
 
-# ` Welcome to Valid Utils`
-
 > A simple and flexible validation package for common data types and formats, including email, URLs, dates, numbers, and more.
 
 ## Installation
