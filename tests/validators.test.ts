@@ -19,7 +19,13 @@ describe("All Validators", () => {
       isItValidEmail("example@gmail.com", {
         maxLength: 30,
       })
-    ).toBeTruthy();
+    ).toBe("example@gmail.com");
+
+    expect(
+      isItValidEmail("example@gmail.com", {
+        maxLength: 10,
+      })
+    ).toMatchObject({ isValid: false });
   });
 
   /*
@@ -37,7 +43,17 @@ describe("All Validators", () => {
         requireSpecialChars: 3,
         specialChars: "#",
       })
-    ).toBeTruthy();
+    ).toBe("mmmOOO778###");
+
+    expect(
+      isItValidPass("mmmOOO778###", {
+        requireLowercase: 3,
+        requireUppercase: 3,
+        requireNumbers: 3,
+        requireSpecialChars: 5,
+        specialChars: "#",
+      })
+    ).toMatchObject({ isValid: false });
   });
 
   /*
@@ -50,7 +66,10 @@ describe("All Validators", () => {
     // @Param data
     // allowed format : YYYY-MM-DD      MM/DD/YYYY    DD/MM/YYYY
 
-    expect(isItValidDate("01/12/2024", "MM/DD/YYYY")).toBeTruthy();
+    expect(isItValidDate("01/12/2024", "MM/DD/YYYY")).toBe("01/12/2024");
+    expect(isItValidDate("01-12-2024", "MM/DD/YYYY")).toMatchObject({
+      isValid: false,
+    });
   });
 
   /*
@@ -69,7 +88,17 @@ describe("All Validators", () => {
         max: 5,
         decimalPlaces: 4,
       })
-    ).toBeTruthy();
+    ).toBe(3.2449);
+
+    expect(
+      isItValidNumber(3.2449, {
+        min: 4,
+        max: 5,
+        decimalPlaces: 3,
+      })
+    ).toMatchObject({
+      isValid: false,
+    });
   });
 
   /*
@@ -78,7 +107,7 @@ describe("All Validators", () => {
 
  */
 
-  it.only("should check if url format is valid", () => {
+  it("should check if url format is valid", () => {
     /**  @Param url
      formats : 
      --------
@@ -100,6 +129,15 @@ describe("All Validators", () => {
         protocols: ["http", "mailto"],
         format: /moemen/i,
       })
-    ).toBeTruthy();
+    ).toBe("http://moemen.com");
+
+    expect(
+      isItValidUrl("https://moemen.com", {
+        protocols: ["http", "mailto"],
+        format: /moemen/i,
+      })
+    ).toMatchObject({
+      isValid: false,
+    });
   });
 });

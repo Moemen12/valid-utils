@@ -1,0 +1,12 @@
+# Exclude development files and unnecessary artifacts
+source/
+tests/
+*.log
+*.tmp
+.env
+.vscode/
+coverage/
+
+# Exclude JavaScript source maps if present in dist
+*.js
+*.js.map

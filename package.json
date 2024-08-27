@@ -1,16 +1,22 @@
 {
-  "name": "validation-toolkit",
+  "name": "valid-utils",
   "version": "1.0.0",
-  "main": "source/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
     "test": "jest",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "validation",
     "javascript-validation",
     "nodejs-validation",
     "SPA-validation"
+  ],
+  "files": [
+    "dist"
   ],
   "author": "Moemen Saade",
   "license": "ISC",
