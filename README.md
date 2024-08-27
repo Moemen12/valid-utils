@@ -104,10 +104,10 @@ Validates a URL based on various customizable options.
 
 The shape of the response returned by validation functions.
 
-| Property  | Type      | Description                                  |
-| --------- | --------- | -------------------------------------------- | ---------------------------------------------------------------------------- |
-| `isValid` | `boolean` | Indicates whether the input is valid or not. |
-| `result`  | `string   | number`                                      | The result of the validation. Contains validation errors or the valid input. |
+| Property | Type                | Description                                      |
+|----------|---------------------|--------------------------------------------------|
+| `isValid`| `boolean`           | Indicates whether the input is valid or not.    |
+| `result` | `string | number`  | The result of the validation. Contains validation errors or the valid input. |
 
 ### `GlobalOptions`
 
